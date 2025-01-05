@@ -5,3 +5,10 @@ This lab showcases [pandas](https://pandas.pydata.org/) for Data Manipulation an
 
 # Dataset
 This dataset was obtained from [Kaggle](https://www.kaggle.com/datasets/crowdflower/twitter-airline-sentiment). For this lab, I have only used the 'Tweets.csv' dataset. 
+
+# Dependencies
+
+- Python
+- pandas
+- plotly
+- Streamlit
