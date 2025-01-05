@@ -25,7 +25,7 @@ def load_data():
     data['tweet_created'] = pd.to_datetime(data['tweet_created']) # convert to pandas datetime format
     return data
 # Load dataset into memory
-data = load_data()
+data = load_data() # unless the name of the function, the code that makes up the function, or its input parameters are changed, Streamlit will skip executing multiple similar functions. This is the main advantage.
 
 # Display User Sentiment on Sidebar
 st.sidebar.subheader("Show Random Tweet")
