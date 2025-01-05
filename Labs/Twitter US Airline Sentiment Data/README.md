@@ -1,3 +1,9 @@
+# Sentiment Analysis of Tweets about US Airlines
+
+This is a streamlit dashboard that performs sentiment analysis on tweets related to US airlines.
+
+**[Click here to view the live app](https://your-streamlit-app-url)**
+
 # Lab Overview
 In this lab, I have practiced to build an interactive data dashboard with [Streamlit](https://streamlit.io/) and [Python](https://www.python.org/). 
 
