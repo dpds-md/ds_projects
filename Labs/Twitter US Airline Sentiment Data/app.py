@@ -15,7 +15,7 @@ st.sidebar.title("Sentiment Analysis of Tweets about US Airlines")
 st.markdown("This application is a Streamlit dashboard to analyze the sentiments of Tweets 🐦")
 st.sidebar.markdown("This application is a Streamlit dashboard to analyze the sentiments of Tweets 🐦")
 
-DATA_URL = ("C:/Users/md/Downloads/DS_projects/ds_projects/Labs/Twitter US Airline Sentiment Data/Data/Tweets.csv")
+DATA_URL = ("C:/Users/md/Downloads/DS_projects/ds_projects/Labs/Twitter US Airline Sentiment Data/Tweets.csv")
 
 # Load data
 # @st.cache_data is a Streamlit decorator that caches the data to improve performance by avoiding reloading it every time the script reruns.
