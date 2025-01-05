@@ -1,4 +1,7 @@
 # import libraries
+# Streamlit is used for building interactive web applications, pandas for data manipulation,
+# numpy for numerical operations, plotly for interactive visualizations,
+# wordcloud for generating word clouds, and matplotlib for plotting the word cloud.
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -14,17 +17,20 @@ st.sidebar.markdown("This application is a Streamlit dashboard to analyze the se
 
 DATA_URL = ("C:/Users/md/Downloads/DS_projects/ds_projects/Labs/Twitter US Airline Sentiment Data/Data/Tweets.csv")
 
+# Load data
+# @st.cache_data is a Streamlit decorator that caches the data to improve performance by avoiding reloading it every time the script reruns.
 @st.cache_data(persist=True) # prevent re-loading the data to save on resource usage
 def load_data():
     data = pd.read_csv(DATA_URL)
     data['tweet_created'] = pd.to_datetime(data['tweet_created']) # convert to pandas datetime format
     return data
-
+# Load dataset into memory
 data = load_data()
 
 # Display User Sentiment on Sidebar
 st.sidebar.subheader("Show Random Tweet")
 random_tweet = st.sidebar.radio('Sentiment', ('positive', 'neutral', 'negative')) # show random tweet based on sentiment values
+# Querying the data for a tweet matching the selected sentiment and displaying a random sample
 st.sidebar.markdown(data.query('airline_sentiment == @random_tweet')[["text"]].sample(n=1).iat[0,0]) 
 
 # Display Number of Tweets by Sentiment
@@ -33,7 +39,7 @@ select = st.sidebar.selectbox('Visualization type', ['Histogram', 'Pie Chart'], 
 sentiment_count = data['airline_sentiment'].value_counts()
 sentiment_count = pd.DataFrame({'Sentiment':sentiment_count.index, 'Tweets':sentiment_count.values})
 
-# Display Visualization type
+# Conditional logic to display the visualization based on user selection
 if not st.sidebar.checkbox("Hide", True):
     st.markdown("### Number of tweets by sentiment")
     if select == "Histogram":
@@ -43,10 +49,11 @@ if not st.sidebar.checkbox("Hide", True):
         fig = px.pie(sentiment_count, values='Tweets', names='Sentiment')
         st.plotly_chart(fig)
 
-# Plotting Location Data on an Interactive Map
+# Adding functionality to filter tweets by time and display on a map
 st.sidebar.subheader('When and where are users tweeting from?')
 hour = st.sidebar.slider("Hour of Day", 0, 23)
 modified_data = data[data['tweet_created'].dt.hour == hour]
+# Conditional logic to display the map based on user preference
 if not st.sidebar.checkbox("Hide", True, key='unique_key_close_2'):
     st.markdown("### Tweets location based on the time of day")
     st.markdown("%i tweets between %i:00 and %i:00" % (len(modified_data), hour, (hour+1)%24))
@@ -56,8 +63,9 @@ if not st.sidebar.checkbox("Hide", True, key='unique_key_close_2'):
 
 # Plotting number of Tweets by Sentiment for each airline
 st.sidebar.subheader("Breakdown airline tweets by sentiment")
+# Allowing the user to select multiple airlines for analysis
 choice = st.sidebar.multiselect("Pick Airline", ("US Airways", "United", "American", "Delta", "Southwest", "Virgin America"), key='unique_key_close_3')
-if len(choice) > 0:
+if len(choice) > 0: # Proceed only if the user selects at least one airline
     choice_data = data[data.airline.isin(choice)]
     fig_choice = px.histogram(choice_data, x='airline', y='airline_sentiment', histfunc='count', color='airline_sentiment',
                               facet_col='airline_sentiment', labels={'airline_sentiment':'tweets'}, height=600, width=800)
@@ -65,6 +73,7 @@ if len(choice) > 0:
 
 # Add WordCloud for Positive, Negative, and Neutral Tweets
 st.sidebar.header("Wordcloud")
+# Allowing the user to choose the sentiment for which the word cloud will be displayed
 word_sentiment = st.sidebar.radio('Display word cloud for what sentiment?', ('positive', 'neutral', 'negative'))
 if not st.sidebar.checkbox("Hide", True, key='unique_key_close_4'):
     st.header('Word Cloud for %s sentiment' % (word_sentiment))
