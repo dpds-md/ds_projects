@@ -3,6 +3,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+from wordcloud import WordCloud, STOPWORDS
+import matplotlib.pyplot as plt
 
 # Create two columns and display info
 st.title("Sentiment Analysis of Tweets about US Airlines")
@@ -52,3 +54,25 @@ if not st.sidebar.checkbox("Hide", True, key='unique_key_close_2'):
     if st.sidebar.checkbox("Show raw data", False):
         st.write(modified_data)
 
+# Plotting number of Tweets by Sentiment for each airline
+st.sidebar.subheader("Breakdown airline tweets by sentiment")
+choice = st.sidebar.multiselect("Pick Airline", ("US Airways", "United", "American", "Delta", "Southwest", "Virgin America"), key='unique_key_close_3')
+if len(choice) > 0:
+    choice_data = data[data.airline.isin(choice)]
+    fig_choice = px.histogram(choice_data, x='airline', y='airline_sentiment', histfunc='count', color='airline_sentiment',
+                              facet_col='airline_sentiment', labels={'airline_sentiment':'tweets'}, height=600, width=800)
+    st.plotly_chart(fig_choice)
+
+# Add WordCloud for Positive, Negative, and Neutral Tweets
+st.sidebar.header("Wordcloud")
+word_sentiment = st.sidebar.radio('Display word cloud for what sentiment?', ('positive', 'neutral', 'negative'))
+if not st.sidebar.checkbox("Hide", True, key='unique_key_close_4'):
+    st.header('Word Cloud for %s sentiment' % (word_sentiment))
+    df = data[data['airline_sentiment']==word_sentiment]
+    words = ' '.join(df['text'])
+    processed_words = ' '.join([word for word in words.split() if 'http' not in word and not word.startswith('@') and word != 'RT'])
+    wordcloud = WordCloud(stopwords=STOPWORDS, background_color='white', height = 640, width = 800).generate(processed_words)
+    fig_wordcloud, ax = plt.subplots()
+    ax.imshow(wordcloud, interpolation='bilinear')
+    ax.axis('off')
+    st.pyplot(fig_wordcloud)
